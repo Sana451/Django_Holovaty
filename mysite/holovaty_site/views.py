@@ -14,7 +14,7 @@ def hello(request):
 def current_datetime(request):
     current_date = datetime.datetime.now()
     # print(locals())
-    return render(request, "templ.html", locals())
+    return render(request, "current_datetime.html", locals())
 
 
 def hours_ahead(request, offset):
@@ -23,12 +23,5 @@ def hours_ahead(request, offset):
     except ValueError:
         raise Http404()
     dt = datetime.datetime.now() + datetime.timedelta(hours=offset)
-    assert False
-    html = """
-                <html>
-                <body>
-                Через {} ч.  будет {}
-                </body>
-                </html>
-                """.format(offset, dt)
-    return HttpResponse(html)
+    print(locals())
+    return render(request, "hours_ahead.html", {"hour_offset": offset, "next_time": dt})
