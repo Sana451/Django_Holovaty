@@ -57,3 +57,17 @@ def mySQLdb_connect(request):
     records = cur.fetchall()
     cur.close()
     return render(request, "templ.html", {"records": records})
+
+
+def display_request_META(request):
+    values = request.META
+    path = request.path
+    print('path is', path, '\n', 'type is', type(path))
+    values.update({'request.path': path})
+    values.update({'request.host': request.get_host()})
+    values.update({'request.full_path': request.get_full_path()})
+    values.update({'request.is_secure': request.is_secure()})
+    return render(request, 'display_meta.html', context={'values': values, 'path': path})
+
+
+
