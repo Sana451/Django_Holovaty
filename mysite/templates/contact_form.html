@@ -6,16 +6,33 @@
 </head>
 <body>
 <h1>Свяжитесь с нами</h1>
-  {% if form.errors %}
-    <p style="color: red;">
-      Исправьте следующие ошибки{{ form.errors }}
-    </p>
-  {% endif %}
+{% if form.errors %}
+<p style="color: red;">
+    Исправьте следующие ошибки{{ form.errors }}
+</p>
+{% endif %}
 <form action="" method="post">
-<table>
-  {{ form.as_table }}
-</table>
-  <input type="submit" value="Отправить">
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Отправить">
 </form>
+
+        <!--    <div class="field">-->
+        <!--        {{ form.subject.errors }}-->
+        <!--        <label for="id_subject">Тема:</label>-->
+        <!--        {{ form.subject }}-->
+        <!--    </div>-->
+        <!--    <div class="field">-->
+        <!--        {{ form.email.errors }}-->
+        <!--        <label for="id_email">E-mail:</label>-->
+        <!--        {{ form.email }}-->
+        <!--    </div>-->
+        <!--        <div class="field">-->
+        <!--        {{ form.message.errors }}-->
+        <!--        <label for="id_message">Сообщение:</label>-->
+        <!--        {{ form.message }}-->
+        <!--    </div>-->
+
 </body>
 </html>

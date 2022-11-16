@@ -62,11 +62,13 @@ def contact(request):
             send_mail(
                         cd['subject'],
                         cd['message'],
-                        cd.get('e-mail', 'sana451@mail.ru'),
+                        cd.get('email', 'sana451@mail.ru'),
                         ['sana451@mail.ru'],
                         fail_silently=False,
             )
             return HttpResponseRedirect('/contact/thanks/')
     else:
-        form = ContactForm()
+        form = ContactForm(
+            initial={'subject': 'I like your site!', 'message': 'i am message'}
+        )
     return render(request, 'contact_form.html', {'form': form})
