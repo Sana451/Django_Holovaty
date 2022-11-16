@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Свяжитесь с нами</title>
+</head>
+<body>
+<h1>Свяжитесь с нами</h1>
+  {% if errors %}
+    <ul>
+      {% for error in errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+<form action="/contact/" method="post">{% csrf_token %}
+  <p>Тема: <input type="text" name="subject" value="{{ subject }}"></p>
+  <p>Ваш e-mail (необязательно): <input type="text" name="e-mail" value="{{ email }}"></p>
+  <p>Сообщение:
+    <textarea name="message" rows="10" cols="50">
+      {{ message }}
+    </textarea>
+  </p>
+  <input type="submit" value="Отправить">
+</form>
+</body>
+</html>

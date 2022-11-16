@@ -14,6 +14,8 @@ urlpatterns = [
     re_path(r"sqlite", sqlite3_connect),
     re_path(r"mysql", mySQLdb_connect),
     re_path(r"display_request_meta", display_request_META),
-    re_path(r"^search-form/$", views.search_form),
+    # re_path(r"^search-form/$", views.search_form),
     re_path(r"^search/$", views.search),
+    re_path(r"^contact/$", views.contact),
+    re_path(r"^contact/thanks/$", views.thanks),
 ]
