@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список книг</title>
+</head>
+<body>
+<h1>Обращение с помощью object_list</h1>
+<ul>
+    {% for book in object_list %}
+    <li>{{ book.title }}, {{ book.publisher }}, {{ book.publication_date }}</li>
+    {% endfor %}
+</ul>
+
+<h1>Обращение с помощью book_list</h1>
+<ul>
+    {% for book in book_list %}
+    <li>{{ book.title }}, {{ book.publisher }}, {{ book.publication_date }}</li>
+    {% endfor %}
+</ul>
+
+
+</body>
+</html>

@@ -15,13 +15,17 @@ def hello(request):
     return HttpResponse("Hello World")
 
 
+def hello_name(request, name):
+    return render(request, 'hello_name.html', {'name': name})
+
+
 def current_datetime(request):
     current_date = datetime.datetime.now()
     # print(locals())
     return render(request, "current_datetime.html", locals())
 
 
-def hours_ahead(request, offset):
+def hours_ahead(request, offset='5'):
     try:
         offset = int(offset)
     except ValueError:
