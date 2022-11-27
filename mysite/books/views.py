@@ -1,14 +1,20 @@
 import datetime
-
+from django.contrib import auth
+from django.contrib.auth.forms import UserCreationForm
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django_comments.views import comments
+
 from .forms import ContactForm
-from books.models import Book, Publisher
-from django.views.generic import TemplateView, ListView, View, RedirectView
+from books.models import Book, Publisher, Author
+from django.views.generic import TemplateView, ListView, View, RedirectView, CreateView
 from django.shortcuts import get_object_or_404
+import os.path
+from reportlab.pdfgen import canvas
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 def search(request):
@@ -109,4 +115,105 @@ class PublisherListView(ListView):
     context_object_name = "my_favorite_publishers"
 
 
+def my_image(request):
+    image_data = open(r"D:\pythonProjects\Django_Holovaty\mysite\templates\logo.png", errors='ignore').read()
+    return HttpResponse(image_data, content_type="image/png")
 
+
+def hello_pdf(request):
+    response = HttpResponse(content_type="application/pdf")
+    response['Content-Disposition'] = 'attachment; filename=hello.pdf'
+    p = canvas.Canvas(response)
+    p.drawString(100, 100, 'Hello PDF')
+    p.showPage()
+    p.save()
+    return response
+
+
+def set_color_get(request):
+    if "favorite_color" in request.GET:
+        response = HttpResponse("Теперь ваш любимый цвет {}".format(request.GET["favorite_color"]))
+        response.set_cookie("favorite_color", request.GET["favorite_color"])
+        return response
+    else:
+        return HttpResponse("Вы не указали любимый цвет.")
+
+
+def show_color(request):
+    if "favorite_color" in request.COOKIES:
+        return HttpResponse("Ваш любимый цвет {}".format(request.COOKIES["favorite_color"]))
+    else:
+        return HttpResponse("У вас нет любимого цвета.")
+
+
+@csrf_exempt
+def post_comment(request):
+    if request.method != 'POST':
+        raise Http404('Разрешены только POST-запросы')
+    if "comment" not in request.POST:
+        raise Http404('Отсутствует комментарий')
+    if request.session.get('has_commented', False):
+        return HttpResponse("Вы уже отправляли комментарий.")
+    c = request.POST.get('comment')
+    request.session['has_commented'] = True
+    return HttpResponse('Спасибо за комментарий')
+
+
+@csrf_exempt
+def login_view(request):
+    if request.method == 'POST':
+        if request.session.test_cookie_worked():
+            request.session.delete_test_cookie()
+            return HttpResponse('Вы вошли в систему.')
+        else:
+            return HttpResponse("Включите поддержку cookies и попробуйте еще раз.")
+    request.session.set_test_cookie()
+    return HttpResponse('test_cookie установлен')
+
+
+def user_is_auth(request):
+    if request.user.is_authenticated:
+        print(request.user)
+        print(request.user.get_full_name())
+        print(request.user.get_all_permissions())
+        # print(request.user.email_user("Subject: View", "I am user_is_auth_view"))
+
+        return HttpResponse('User is auth')
+    else:
+        return HttpResponse('Other user')
+
+
+@csrf_exempt
+def login_view2(request):
+    username = request.POST.get('username', '')
+    password = request.POST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        auth.login(request, user)
+        # return HttpResponseRedirect('/account/loggedin')
+        return HttpResponse('you are logged in')
+    else:
+        # return HttpResponseRedirect('/account/invalid')
+        return HttpResponse('invalid username/password')
+
+
+def logout_view(request):
+    auth.logout(request)
+    return HttpResponse('You are logged out')
+    # return HttpResponseRedirect('/account/loggedout')
+
+
+@csrf_exempt
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            return HttpResponse('user created')
+    else:
+        form = UserCreationForm()
+    return render(request, "register.html", {'form': form})
+
+
+def Http_404(request):
+    raise Http404

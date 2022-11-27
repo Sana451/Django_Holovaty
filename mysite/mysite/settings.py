@@ -35,7 +35,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'books',
+    'django.contrib.sites',
+    'django_comments',
+    'django.contrib.redirects',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -75,6 +80,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'CONN_MAX_AGE': 3600,
         'OPTIONS': {
             'read_default_file': "D:/mysqlx64/my.cnf",
         },
@@ -122,3 +128,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 8025
+
+CSRF_TRUSTED_ORIGINS = ['chrome-extension://gmmkjpcadciiokjpikmkkmapphbmdjok']
